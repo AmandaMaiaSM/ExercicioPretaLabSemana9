@@ -3,9 +3,10 @@ import { Book } from '../../../domain/book';
 import { BookModel } from './model';
 
 export class Repository implements BookRepository {
-  async save (book: Book): Promise<void> {
-    const newBook = new BookModel(book)
-    await newBook.save();
+  async save (book: Book): Promise<Book> {
+    const newBook = new BookModel(book);
+    const savedBook = await newBook.save();
+    return savedBook as Book;  
   }
 
   async findAll (): Promise<Array<Book>> {
@@ -49,8 +50,23 @@ export class Repository implements BookRepository {
     return null
   }
 
-  async delete(id: string): Promise<void> {
-    await BookModel.findByIdAndDelete(id)
+  async delete(id: string): Promise<Book | null> {
+    const deletedBook = await BookModel.findByIdAndDelete(id);
+    if (deletedBook) {
+      return {
+        id: deletedBook._id.toString(),
+        author: deletedBook.author,
+        category: deletedBook.category,
+        createdAt: deletedBook.createdAt,
+        isbn: deletedBook.isbn,
+        publisher: deletedBook.publisher,
+        status: deletedBook.status,
+        title: deletedBook.title,
+        cover: deletedBook.cover
+      } as Book;
+    }
+    return null; 
   }
+
 }
 

@@ -10,11 +10,12 @@ export class CreateBookUseCase {
       ...bookParams,
     } as Book;
 
-    await this.bookRepository.save(book);
-    return book;
+    const savedBook = await this.bookRepository.save(book);
+    return savedBook;
   }
 
   private getDate() {
     return new Date().toLocaleDateString("PT-br");
   }
+
 }

@@ -51,10 +51,33 @@ export class BookController {
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
+  
+    try {
+      const deletedBook = await this.deleteBooksUseCase.execute(id);
+  
+      // Verifique se o livro realmente foi deletado
+      if (!deletedBook) {
+        return res.status(404).json({ message: `Livro com ID ${id} não encontrado` });
+      }
+  
+      return res.json({
+        message: `Livro com ${id} deletado com sucesso`,
+        deletedBook,  // Você pode incluir o livro deletado na resposta, se desejar
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Erro ao deletar livro" });
+    }
+  }
+  
+}
+
+
+ /*
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
     const booksFiltered = await this.deleteBooksUseCase.execute(id);
     res.json({
       message: `Livro com ${id} deletado com sucesso`,
       booksFiltered,
     });
-  }
-}
+  }*/
