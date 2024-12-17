@@ -6,6 +6,8 @@ export class CreateBookUseCase {
   constructor(private bookRepository: BookRepository) {}
 
   async execute(bookParams: Book): Promise<Book> {
+
+
     const book = {
       ...bookParams,
     } as Book;
@@ -17,5 +19,6 @@ export class CreateBookUseCase {
   private getDate() {
     return new Date().toLocaleDateString("PT-br");
   }
+  
 
 }
